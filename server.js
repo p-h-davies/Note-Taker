@@ -70,41 +70,28 @@ app.get('/api/notes', (req, res) => {
 
 app.delete(`/api/notes/:id`, (req, res) => {
     const { id } = req.params;
-
-    //read file
     fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
         if (err) {
             console.error(err);
         } else {
             const parsedNotes = JSON.parse(data);
-            console.log(parsedNotes)
+            // console.log(parsedNotes)
+            // notesArray = Object.entries(parsedNotes)
 
-            //delete item in the parsedNotes object which has the ID specified in the param
-            for (const id in parsedNotes) {
-
-                const element = parsedNotes[id]
-
-
-            }
-
-        };
-        //rewrite file 
-        fs.writeFile(
-            './Develop/db/db.json',
-            JSON.stringify(parsedNotes, null, 4),
-            (writeErr) =>
-                writeErr
-                    ? console.error(writeErr)
-                    : console.info('Successfully updated notes!')
-        );
+            fs.writeFile(
+                './Develop/db/db.json',
+                JSON.stringify(parsedNotes, null, 4),
+                (writeErr) =>
+                    writeErr
+                        ? console.error(writeErr)
+                        : console.info('Successfully updated notes!')
+            );
 
 
-        res.status(200).json(`${req.method} request received`);
-        return;
-    }
-    )
+            res.send("DELETE Request Called")
+        }
+    })
 })
-
 
 app.listen(PORT, () =>
     console.log(`Example app listening at http://localhost:${PORT}`)
