@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const app = express();
+var uniqid = require('uniqid');
+
 
 const PORT = 3001;
 
@@ -22,12 +24,11 @@ app.get('/notes', (req, res) =>
 
 app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
-    // If all the required properties are present
     if (title && text) {
-        // Variable for the object we will save
         const newNote = {
             title,
-            text
+            text,
+            id: uniqid()
         };
         const response = {
             status: 'success',
@@ -38,11 +39,8 @@ app.post('/api/notes', (req, res) => {
             if (err) {
                 console.error(err);
             } else {
-                // Convert string into JSON object
                 const parsedNotes = JSON.parse(data);
-                // Add a new note
                 parsedNotes.push(newNote);
-                // Write updated notes back to the file
                 fs.writeFile(
                     './Develop/db/db.json',
                     JSON.stringify(parsedNotes, null, 4),
@@ -59,11 +57,24 @@ app.post('/api/notes', (req, res) => {
 });
 
 app.get('/api/notes', (req, res) => {
-    res.status(200).json(`${req.method} request received to get notes`);
+    fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+        } else {
+            const existingNote = JSON.parse(data);
+            res.json(existingNote);
+        }
+    })
+
 })
 
+app.delete(`/api/notes/:id`, (req, res) => {
+    const { id } = req.params;
 
 
+
+    res.send("DELETE Request Called")
+})
 
 app.listen(PORT, () =>
     console.log(`Example app listening at http://localhost:${PORT}`)
