@@ -53,12 +53,13 @@ app.post('/api/notes', (req, res) => {
                 );
             }
         })
-        return
+        res.status(200).json(`${req.method} request received`);
+        return;
     }
 });
 
 app.get('/api/notes', (req, res) => {
-    console.info(`GET /api/reviews`);
+    res.status(200).json(`${req.method} request received to get notes`);
 })
 
 
