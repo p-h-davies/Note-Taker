@@ -22,6 +22,7 @@ app.get('/notes', (req, res) =>
     res.sendFile(path.join(__dirname, 'Develop/public/notes.html'))
 );
 
+//Post route to create/save notes
 app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
     if (title && text) {
@@ -56,6 +57,7 @@ app.post('/api/notes', (req, res) => {
     }
 });
 
+//Get route to retrieve
 app.get('/api/notes', (req, res) => {
     fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
         if (err) {
@@ -68,8 +70,7 @@ app.get('/api/notes', (req, res) => {
 
 })
 
-
-
+//Delete route
 app.delete(`/api/notes/:id`, (req, res) => {
     const { id } = req.params;
     fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
@@ -92,8 +93,12 @@ app.delete(`/api/notes/:id`, (req, res) => {
     })
 })
 
+//Catch all path
+app.get('/*', (req, res) =>
+    res.sendFile(path.join(__dirname, 'Develop/public/index.html'))
+);
 
-
-app.listen(process.env.PORT);
+//Port listener
+app.listen(process.env.PORT || 3001);
 
 console.log(`Example app listening at http://localhost:${PORT}`)
