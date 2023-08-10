@@ -68,6 +68,8 @@ app.get('/api/notes', (req, res) => {
 
 })
 
+
+
 app.delete(`/api/notes/:id`, (req, res) => {
     const { id } = req.params;
     fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
@@ -75,23 +77,22 @@ app.delete(`/api/notes/:id`, (req, res) => {
             console.error(err);
         } else {
             const parsedNotes = JSON.parse(data);
-            // console.log(parsedNotes)
-            // notesArray = Object.entries(parsedNotes)
-
+            let notesArray = parsedNotes.filter(item => item.id !== id);
             fs.writeFile(
                 './Develop/db/db.json',
-                JSON.stringify(parsedNotes, null, 4),
+                JSON.stringify(notesArray, null, 4),
                 (writeErr) =>
                     writeErr
                         ? console.error(writeErr)
                         : console.info('Successfully updated notes!')
             );
 
-
             res.send("DELETE Request Called")
         }
     })
 })
+
+
 
 app.listen(PORT, () =>
     console.log(`Example app listening at http://localhost:${PORT}`)
